@@ -3,11 +3,10 @@ import math
 import sys
 
 class column_matcher():
-    def __init__(self, q_start=5, q_end=10, src_keys_ratio=0.5, tgt_keys_ratio=0.5, matching_ratio=0.5):
+    def __init__(self, q_start=5, q_end=10, src_keys_ratio=0.5, matching_ratio=0.5):
         self.q_start = q_start
         self.q_end = q_end
         self.src_keys_ratio = src_keys_ratio
-        self.tgt_keys_ratio = tgt_keys_ratio
         self.matching_ratio = matching_ratio
         
         return
