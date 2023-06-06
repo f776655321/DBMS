@@ -1,12 +1,8 @@
 ## Introduction
 
----
-
 The main purpose of the class object 'column_matcher' is to find a reasonable and joinable target column given a source table, a target table, and a source specified column.
 
 ## Hyperparameters
-
----
 
 There are four hyperparameters that can be tuned
 
@@ -16,8 +12,6 @@ There are four hyperparameters that can be tuned
 - matching_ratio: the threshold ratio of (matching row pairs / number of rows in the source column)
 
 ## Usage
-
----
 
 Build a column_matcher object:
     
