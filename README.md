@@ -1,8 +1,8 @@
-## Introduction
+# Introduction
 
 The main purpose of the class object `column_matcher` is to find a reasonable and joinable target column given a source table, a target table, and a source specified column.
 
-## Hyperparameters
+# Hyperparameters
 
 There are four hyperparameters that can be tuned
 
@@ -11,17 +11,22 @@ There are four hyperparameters that can be tuned
 - `src_keys_ratio` : the value deciding whether a source column is the primary key of the table or not
 - `matching_ratio` : the threshold ratio of (matching row pairs / number of rows in the source column)
 
-## Usage
+# Usage
+## Build a table:
 
-Build a column_matcher object:
+    lst = []
+    tables, all_tables = dl.get_tables_from_dir(DS_PATH, lst, make_lower=True, verbose=False)
+Use the items in `all_tables` as the input in below primary/foreign key tables.
+
+## Build a column_matcher object:
     
     my_col_matcher = column_matcher()
 
-Find a reasonable `target_column` given `src_table`, `target_table`, and `src_specified_column`:
+Retrun a tuple (`specified_column_in_primary_key_table`, `foreign_key_table_column`) with reasonable `foreign_key_table_column` given `primary_key_table`, `foreign_key_table`, and `specified_column_in_primary_key_table`:
 
-    target_column = my_col_matcher.get_column_matching(src_table, target_table, src_specified_column)
+    foreign_key_table_column = my_col_matcher.get_column_matching(primary_key_table, foreign_key_table, specified_column_in_primary_key_table)
 
-## Experiment
+# Experiment
 
 Experiment on the dataset in [**autojoin-Benchmark**](https://github.com/f776655321/DBMS/tree/column_matcher/data/autojoin-Benchmark):
 
