@@ -89,6 +89,7 @@ def files_to_tables(file):
 args = sys.argv[:]
 primary_file = args[1]
 foreign_file = args[2]
+primary_key_column = args[3]
 
 fileA = files_to_tables(primary_file)
 fileB = files_to_tables(foreign_file)
@@ -100,5 +101,5 @@ fileB = files_to_tables(foreign_file)
 # print(a)
 # print(all_tables[4])
 my_col_matcher = column_matcher()
-target_column = my_col_matcher.get_column_matching(fileA, fileB, "Governor")
+target_column = my_col_matcher.get_column_matching(fileA, fileB, primary_key_column)
 print(target_column)
