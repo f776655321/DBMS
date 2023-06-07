@@ -11,11 +11,11 @@ def parse_arguments():
     parser = ArgumentParser()
 
     parser.add_argument('--data_dir', type=str,
-                        default='./data')
+                        default='../data')
     parser.add_argument('--benchmark', type=str,
                         default='autojoin-Benchmark')
     parser.add_argument('--case', type=str,
-                        default='beatles songs')                
+                        default='us cities')                
     args = parser.parse_args()
     return args
 
@@ -125,5 +125,4 @@ def main(args):
 if __name__ == '__main__':
     main(parse_arguments())
     
-    sentences = [,'All I Want For Christmas Is You - Mariah Carey']
     

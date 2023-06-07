@@ -11,7 +11,7 @@ def parse_arguments():
     parser = ArgumentParser()
 
     parser.add_argument('--data_dir', type=str,
-                        default='./data')
+                        default='../data')
     parser.add_argument('--benchmark', type=str,
                         default='autojoin-Benchmark')
     args = parser.parse_args()
