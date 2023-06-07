@@ -1,12 +1,14 @@
-from data_processor import DataLoader as dl
-from data_processor import Matcher as matcher
+from column_matcher import column_matcher
+
+import DataLoader as dl
+import Matcher as matcher
 import pathlib
 import math
 import sys
 
 
 BASE_PATH = str(pathlib.Path(__file__).absolute().parent.parent.absolute())
-DS_PATH = BASE_PATH + '/data/autojoin-Benchmark/'
+DS_PATH = './data/autojoin-Benchmark/'
 
 def get_qgrams(q,s):
     res = set()
@@ -56,7 +58,7 @@ def get_column_matching(src_table, target_table, src_specified_column, src_keys_
             continue
 
         cnt = get_count_matching_q_grams(q, col_src, col_tgt)
-        print(cnt)
+        # print(cnt)
         if cnt > len(col_src) * matching_ratio:
             res.append({
                 'src_table': src_table['name'],
@@ -74,6 +76,10 @@ def get_column_matching(src_table, target_table, src_specified_column, src_keys_
 
 lst = []
 tables, all_tables = dl.get_tables_from_dir(DS_PATH, lst, make_lower=True, verbose=False)
-print("Reading Done!")
-a = get_column_matching(all_tables[2], all_tables[3], 'Time in Office')
-print(a)
+# print("Reading Done!")
+# a = get_column_matching(all_tables[2], all_tables[3], 'Time in Office')
+# print(a)
+
+my_col_matcher = column_matcher()
+target_column = my_col_matcher.get_column_matching(all_tables[4], all_tables[5], "Governor")
+print(target_column)
