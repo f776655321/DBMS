@@ -74,12 +74,31 @@ def get_column_matching(src_table, target_table, src_specified_column, src_keys_
         'bidi': True,
     }
 
-lst = []
-tables, all_tables = dl.get_tables_from_dir(DS_PATH, lst, make_lower=True, verbose=False)
+def files_to_tables(file):
+    res = {
+        'src': {'name': 'src_'+file, 'titles': None, 'items': []},
+        'target': {'name': 'target_'+file, 'titles': None, 'items': []},
+        'name': file
+    }
+    with open(file, encoding='UTF8') as f:
+        res['src']['titles'] = f.readline().strip().split(',')
+        res['src']['items'] = [line.strip().split(',') for line in f.readlines()]
+    
+    return res['src']
+    
+args = sys.argv[:]
+primary_file = args[1]
+foreign_file = args[2]
+
+fileA = files_to_tables(primary_file)
+fileB = files_to_tables(foreign_file)
+# print()
+# lst = []
+# tables, all_tables = dl.get_tables_from_dir(DS_PATH, lst, make_lower=True, verbose=False)
 # print("Reading Done!")
 # a = get_column_matching(all_tables[2], all_tables[3], 'Time in Office')
 # print(a)
-
+# print(all_tables[4])
 my_col_matcher = column_matcher()
-target_column = my_col_matcher.get_column_matching(all_tables[4], all_tables[5], "Governor")
+target_column = my_col_matcher.get_column_matching(fileA, fileB, "Governor")
 print(target_column)
