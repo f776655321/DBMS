@@ -20,4 +20,3 @@ python ./test_performance/test.py --data_dir data_dir_path --benchmark benchmark
 * Cases whose F1 are < 0.85: [christmas songs 1,christmas songs 2,park to state 1]
 ### Current problem:
 Some cases need coloums need to be joined by two coloum or more.
-
