@@ -27,6 +27,21 @@ class column_matcher():
 
         return res
     
+    def files_to_tables(self, fileA, fileB):
+        tables = []
+        files = [fileA, fileB]
+        for file in files:
+            res = {
+            'src': {'name': 'src_'+file, 'titles': None, 'items': []},
+            'target': {'name': 'target_'+file, 'titles': None, 'items': []},
+            'name': file
+            }
+            with open(file, encoding='UTF8') as f:
+                res['src']['titles'] = f.readline().strip().split(',')
+                res['src']['items'] = [line.strip().split(',') for line in f.readlines()]
+            tables.append(res['src'])
+        return tables
+    
     def get_count_matching_q_grams(self, q, src_set, target_set):
         cnt = 0
         for src in src_set:

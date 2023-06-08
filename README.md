@@ -12,12 +12,11 @@ There are four hyperparameters that can be tuned
 - `matching_ratio` : the threshold ratio of (matching row pairs / number of rows in the source column)
 
 # Usage
-## Build a table:
+See testing.py as an example:
+## Command line arguments
+Follow the format below.
 
-    lst = []
-    tables, all_tables = dl.get_tables_from_dir(DS_PATH, lst, make_lower=True, verbose=False)
-Use the items in `all_tables` as the input in below primary/foreign key tables.
-
+    python testing.py primary_key_file foreign_key_file sepcified_column_of_primary_file
 ## Build a column_matcher object:
     
     my_col_matcher = column_matcher()
