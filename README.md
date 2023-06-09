@@ -27,7 +27,7 @@ tables = col_matcher.files_to_tables(primary_table, foreign_table)
 
 foreign_column = col_matcher.get_column_matching(tables[0], tables[1], primary_column)
 ```
-### Row Matcher:
+### Row Matcher (GPU required):
 #### After you have foreign column, you can use Row Matcher to generate the final join table. (Currently, Row Matcher would output the result to a csv file.)
 ```
 from CRmatcher import FileRowMatcher
