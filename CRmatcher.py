@@ -2,7 +2,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer
 import torch
 from tqdm import tqdm
-class FileRowMatcher:
+class RowMatcher:
     def __init__(self):
 
         self.model = SentenceTransformer('sentence-transformers/gtr-t5-large')
@@ -77,7 +77,7 @@ class FileRowMatcher:
 
         df.to_csv(output_file, index=False)
 
-class column_matcher():
+class ColMatcher:
     def __init__(self, q_start=5, q_end=10, src_keys_ratio=0.5, matching_ratio=0.5):
         self.q_start = q_start
         self.q_end = q_end

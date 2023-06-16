@@ -1,4 +1,4 @@
-from CRmatcher import FileRowMatcher
+from CRmatcher import RowMatcher
 from argparse import ArgumentParser
 import os
 
@@ -54,6 +54,6 @@ if __name__ == '__main__':
     # We don't use foreign_column.
     foreign_file, foreign_column, primary_column, primary_file = get_data(args.input_data_dir,args.benchmark,args.case)
 
-    row_matcher = FileRowMatcher()
+    row_matcher = RowMatcher()
 
     row_matcher.find(args.output_file, foreign_column, primary_column, foreign_file, primary_file)
