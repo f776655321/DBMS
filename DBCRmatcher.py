@@ -1,8 +1,8 @@
 import pandas as pd
-# import torch
+import torch
 import mysql.connector
-# from sentence_transformers import SentenceTransformer
-# from tqdm import tqdm
+from sentence_transformers import SentenceTransformer
+from tqdm import tqdm
 
 class DBRowMatcher:
     
@@ -10,13 +10,13 @@ class DBRowMatcher:
         self.host = config['host']
         self.user = config['user']
         self.passwd = config['passwd']
-        # self.model = SentenceTransformer('sentence-transformers/gtr-t5-large')
+        self.model = SentenceTransformer('sentence-transformers/gtr-t5-large')
 
-        # cuda_available = torch.cuda.is_available()
+        cuda_available = torch.cuda.is_available()
 
-        # self.device = torch.device("cuda" if cuda_available else "cpu")
+        self.device = torch.device("cuda" if cuda_available else "cpu")
 
-        # self.model = SentenceTransformer('sentence-transformers/gtr-t5-large').to(self.device)
+        self.model = SentenceTransformer('sentence-transformers/gtr-t5-large').to(self.device)
 
     def find(self, output_file, primary_coloum, foreign_coloum,  primary_table, foreign_table, primary_db, foreign_db, thershold = 0.6, difference = 0.24):
         
@@ -41,65 +41,65 @@ class DBRowMatcher:
         f_coloum_data = foreign[foreign_coloum].values
         p_coloum_data = primary[primary_coloum].values
 
-        # temp_predict = []
-        # store = []
+        temp_predict = []
+        store = []
 
-        # for index,f_coloum in tqdm(enumerate(f_coloum_data),total = len(f_coloum_data)):
+        for index,f_coloum in tqdm(enumerate(f_coloum_data),total = len(f_coloum_data)):
             
-        #     sentences = []
+            sentences = []
 
-        #     for p_coloum in p_coloum_data:
-        #         sentences.append(str(p_coloum))
-        #         sentences.append(str(f_coloum))
+            for p_coloum in p_coloum_data:
+                sentences.append(str(p_coloum))
+                sentences.append(str(f_coloum))
             
-        #     embeddings = self.model.encode(sentences)
-        #     embeddings = torch.tensor(embeddings).to(self.device)
+            embeddings = self.model.encode(sentences)
+            embeddings = torch.tensor(embeddings).to(self.device)
 
-        #     reshaped_embeddings = embeddings.view(-1, 2, embeddings.size(1))
+            reshaped_embeddings = embeddings.view(-1, 2, embeddings.size(1))
             
-        #     dot_product = torch.diagonal(torch.matmul(reshaped_embeddings[:, 0, :],reshaped_embeddings[:, 1, :].t()))
+            dot_product = torch.diagonal(torch.matmul(reshaped_embeddings[:, 0, :],reshaped_embeddings[:, 1, :].t()))
 
-        #     max_index = torch.argmax(dot_product)
+            max_index = torch.argmax(dot_product)
 
-        #     temp_predict.append((index,max_index))
+            temp_predict.append((index,max_index))
 
-        #     store.append(dot_product[max_index])
+            store.append(dot_product[max_index])
 
-        # store = torch.tensor(store).to(self.device)
+        store = torch.tensor(store).to(self.device)
         
-        # representation = torch.argmax(store)
+        representation = torch.argmax(store)
 
-        # if(store[representation] > thershold):
-        #     indices = torch.nonzero(store > (store[representation] - difference))
+        if(store[representation] > thershold):
+            indices = torch.nonzero(store > (store[representation] - difference))
 
-        # f_column_names = foreign.columns.tolist()
-        # p_column_names = primary.columns.tolist()
+        f_column_names = foreign.columns.tolist()
+        p_column_names = primary.columns.tolist()
 
-        # total_names = f_column_names + p_column_names
-        # output = dict()
+        total_names = f_column_names + p_column_names
+        output = dict()
 
-        # for name in total_names:
-        #     output[name] = []
+        for name in total_names:
+            output[name] = []
 
-        # foreign_data = foreign.to_dict('records')
-        # primary_data = primary.to_dict('records')
+        foreign_data = foreign.to_dict('records')
+        primary_data = primary.to_dict('records')
 
-        # for indice in indices:
-        #     f_indice = temp_predict[indice][0]
-        #     p_indice = temp_predict[indice][1]
+        for indice in indices:
+            f_indice = temp_predict[indice][0]
+            p_indice = temp_predict[indice][1]
             
-        #     for key, value in foreign_data[f_indice].items():
-        #         output[key].append(value)
+            for key, value in foreign_data[f_indice].items():
+                output[key].append(value)
             
-        #     for key, value in primary_data[p_indice].items():
-        #         output[key].append(value)
+            for key, value in primary_data[p_indice].items():
+                output[key].append(value)
 
-        # df = pd.DataFrame(output)
-        # if(output_file):
-        #   df.to_csv(output_file, index=False)
-        #   return 
-        # else:
-        #   return df
+        df = pd.DataFrame(output)
+        if(output_file):
+          df.to_csv('./output.csv', index=False)
+          return 
+        else:
+          return df
 
 class DBColMatcher:
     def __init__(self, q_start=5, q_end=10, src_keys_ratio=0.5, matching_ratio=0.5):

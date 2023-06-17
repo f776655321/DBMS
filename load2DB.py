@@ -16,7 +16,7 @@ cursor = db.cursor()
 cursor.execute("CREATE DATABASE IF NOT EXISTS Source")
 cursor.execute("CREATE DATABASE IF NOT EXISTS Target")
 
-topic = 'us cities'
+topic = 'texas govs 1'
 folder = f'./data/autojoin-Benchmark/{topic}'
 
 for table in os.listdir(folder):

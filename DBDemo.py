@@ -8,5 +8,6 @@ config = {
 }
 
 Matcher = DBRowMatcher(config)
-Matcher.find(False, 'United_States_Cities', 'City', 'us_cities', 'us_cities', 'Source', 'Target')
+result = Matcher.find(True, 'Governor', "Governor's_Name", 'texas_govs_1', 'texas_govs_1', 'Source', 'Target')
+print(result)
 

@@ -14,23 +14,23 @@ class RowMatcher:
 
         self.model = SentenceTransformer('sentence-transformers/gtr-t5-large').to(self.device)
 
-    def find(self,output_file,primary_coloum,foreign_coloum,primary_file,foreign_file,thershold = 0.6,difference = 0.24):
-        foreign = pd.read_csv(foreign_file)
-        primary = pd.read_csv(primary_file)
+    def find(self, output_file, primary_column, foreign_column, primary, foreign, thershold = 0.6, difference = 0.24):
+        # foreign = pd.read_csv(foreign_file)
+        # primary = pd.read_csv(primary_file)
 
-        f_coloum_data = foreign[foreign_coloum].values
-        p_coloum_data = primary[primary_coloum].values
+        f_column_data = foreign[foreign_column].values
+        p_column_data = primary[primary_column].values
 
         temp_predict = []
         store = []
 
-        for index,f_coloum in tqdm(enumerate(f_coloum_data),total = len(f_coloum_data)):
+        for index,f_column in tqdm(enumerate(f_column_data),total = len(f_column_data)):
             
             sentences = []
 
-            for p_coloum in p_coloum_data:
-                sentences.append(str(p_coloum))
-                sentences.append(str(f_coloum))
+            for p_column in p_column_data:
+                sentences.append(str(p_column))
+                sentences.append(str(f_column))
             
             embeddings = self.model.encode(sentences)
             embeddings = torch.tensor(embeddings).to(self.device)
@@ -77,7 +77,7 @@ class RowMatcher:
         df = pd.DataFrame(output)
         if(output_file):
             df.to_csv(output_file, index=False)
-            return
+            return None
         else:
             return df
 
