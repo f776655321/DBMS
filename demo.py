@@ -1,6 +1,7 @@
 from CRmatcher import ColMatcher, RowMatcher
 from argparse import ArgumentParser
 import os
+import pandas as pd
 
 def parse_arguments():
     parser = ArgumentParser()
@@ -56,13 +57,15 @@ if __name__ == '__main__':
 
     col_matcher = ColMatcher()
     
-    tables = col_matcher.files_to_tables(primary_file, foreign_file)
-
-    foreign_column = col_matcher.get_column_matching(tables[0], tables[1], primary_column)
+    primary_df = pd.read_csv(primary_file)
+        
+    foreign_df = pd.read_csv(foreign_file)
+    
+    foreign_column = col_matcher.get_column_matching(primary_df, foreign_df, primary_column)
 
     row_matcher = RowMatcher()
 
-    result = row_matcher.find(args.output_file, primary_column, foreign_column, primary_file, foreign_file)
+    result = row_matcher.find(args.output_file, primary_column, foreign_column, primary_df, foreign_df)
 
 
 

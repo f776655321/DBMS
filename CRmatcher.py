@@ -72,7 +72,6 @@ class RowMatcher:
             for key, value in foreign_data[f_indice].items():
                 output[key].append(value)
                 push_yet.add(key)
-
             for key, value in primary_data[p_indice].items():
                 if(key not in push_yet):
                     output[key].append(value)
@@ -107,19 +106,24 @@ class ColMatcher:
 
         return res
     
-    def files_to_tables(self, fileA, fileB):
+    def df_to_tables(self, df1, df2):
+        df1 = df1.astype(str)
+        df2 = df2.astype(str)
+        df1.fillna('', inplace=True)
+        df2.fillna('', inplace=True)
+        
         tables = []
-        files = [fileA, fileB]
-        for file in files:
+        dfs = [df1, df2]
+        for df1 in dfs:
             res = {
-            'src': {'name': 'src_'+file, 'titles': None, 'items': []},
-            'target': {'name': 'target_'+file, 'titles': None, 'items': []},
-            'name': file
+            'titles': None, 
+            'items': []
             }
-            with open(file, encoding='UTF8') as f:
-                res['src']['titles'] = f.readline().strip().split(',')
-                res['src']['items'] = [line.strip().split(',') for line in f.readlines()]
-            tables.append(res['src'])
+
+            res['titles'] = df1.columns.tolist()
+            res['items'] = [row.tolist() for _, row in df1.iterrows()] 
+
+            tables.append(res)
         return tables
     
     def get_count_matching_q_grams(self, q, src_set, target_set):
@@ -134,9 +138,14 @@ class ColMatcher:
 
         return cnt
     
-    def get_column_matching(self, src_table, target_table, src_specified_column, ):
+    def get_column_matching(self, src_df, target_df, src_specified_column):
+        tables = self.df_to_tables(src_df, target_df)
+        src_table = tables[0]
+        target_table = tables[1]
+        print(src_table)
+        
         res = []
-        # print(f'Column matching!\nsrc_table: {src_table["name"]}\nsrc_column: {src_specified_column}\ntgt_table: {target_table["name"]}\ntgt_columns: {target_table["titles"]}\n')
+        print(f'Column matching!')
         if src_specified_column in src_table['titles']:
             index = src_table['titles'].index(src_specified_column)
         else:
@@ -166,10 +175,8 @@ class ColMatcher:
         idx = column_cnt.index(max(column_cnt))
         # print(f'Find the best target column: {target_table["titles"][idx]} with q={column_cnt[idx][1]}')
         res.append({
-            'src_table': src_table['name'],
             'src_row': src_table['titles'][index],
             'src_row_id': index,
-            'target_table': target_table['name'],
             'target_row': target_table['titles'][idx],
             'target_row_id': idx,
         })

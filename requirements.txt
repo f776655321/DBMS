@@ -1,0 +1,5 @@
+tqdm
+pandas
+pytorch
+sentence-transformers
+mysql
