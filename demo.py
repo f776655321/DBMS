@@ -12,7 +12,7 @@ def parse_arguments():
     parser.add_argument('--case', type=str,
                         default='fruits 1')
     parser.add_argument('--output_file', type=str,
-                        default='./output.csv')
+                        default=True)
 
     args = parser.parse_args()
     return args
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     row_matcher = RowMatcher()
 
-    row_matcher.find(args.output_file, foreign_column, primary_column, foreign_file, primary_file)
+    result = row_matcher.find(args.output_file, foreign_column, primary_column, foreign_file, primary_file)
 
 
 

@@ -1,11 +1,13 @@
 import pandas as pd
-import torch
-from sentence_transformers import SentenceTransformer
-from tqdm import tqdm
+# import torch
+import mysql.connector
+# from sentence_transformers import SentenceTransformer
+# from tqdm import tqdm
 
-class RowMatcher:
-    def __init__(self):
-
+class DBRowMatcher:
+    
+    def __init__(self, connector):
+        self.connector = connector
         self.model = SentenceTransformer('sentence-transformers/gtr-t5-large')
 
         cuda_available = torch.cuda.is_available()
@@ -14,9 +16,19 @@ class RowMatcher:
 
         self.model = SentenceTransformer('sentence-transformers/gtr-t5-large').to(self.device)
 
-    def find(self,output_file,foreign_coloum,primary_coloum,foreign_file,primary_file,thershold = 0.6,difference = 0.24):
-        foreign = pd.read_csv(foreign_file)
-        primary = pd.read_csv(primary_file)
+    def find(self, output_file, primary_coloum, foreign_coloum,  primary_table, foreign_table, primary_db, foreign_db, thershold = 0.6, difference = 0.24):
+        cursor = self.connector.cursor()
+        cursor.execute(f'USE {foreign_db}')
+        cursor.execute(f'SELECT * FROM {foreign_table}')
+        column_names = [desc[0] for desc in cursor.description]
+        data = cursor.fetchall()
+        foreign =  pd.DataFrame(data, columns=column_names)
+
+        cursor.execute(f'USE {primary_db}')
+        cursor.execute(f'SELECT * FROM {primary_table}')
+        column_names = [desc[0] for desc in cursor.description]
+        data = cursor.fetchall()
+        primary =  pd.DataFrame(data, columns=column_names)
 
         f_coloum_data = foreign[foreign_coloum].values
         p_coloum_data = primary[primary_coloum].values
@@ -75,13 +87,14 @@ class RowMatcher:
                 output[key].append(value)
 
         df = pd.DataFrame(output)
+        cursor.close()
         if(output_file):
-            df.to_csv(output_file, index=False)
-            return
+          df.to_csv(output_file, index=False)
+          return 
         else:
-            return df
+          return df
 
-class ColMatcher:
+class DBColMatcher:
     def __init__(self, q_start=5, q_end=10, src_keys_ratio=0.5, matching_ratio=0.5):
         self.q_start = q_start
         self.q_end = q_end
