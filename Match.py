@@ -13,7 +13,7 @@ class CSVMatcher:
         foreign = pd.read_csv(foreign_file)
         result = self.RowMatcher.find(output_csv, primary_column, foreign_column, primary, foreign)
         return result
-    def Col_Matcher()
+    # def Col_Matcher()
         
         
 # class DBMatcher:
