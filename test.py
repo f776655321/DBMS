@@ -9,7 +9,7 @@ config ={
 }
 CSV = CSVMatcher()
 DB = DBMatcher(config)
-result = CSV.Match(True, primary_file, foreign_file, 'Governor', "Governor's Name")
+result = CSV.Match(True, primary_file, foreign_file, ['Governor', 'Party'], ["Governor's Name", "Party"])
 print(result)
-result = DB.Match(True, 'Source', 'Target', 'texas_govs_1', 'texas_govs_1', 'Governor', "Governor's_Name")
-print(result)
+# result = DB.Match(True, 'Source', 'Target', 'texas_govs_1', 'texas_govs_1', 'Governor', "Governor's_Name")
+# print(result)
