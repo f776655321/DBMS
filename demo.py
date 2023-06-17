@@ -61,7 +61,9 @@ if __name__ == '__main__':
         
     foreign_df = pd.read_csv(foreign_file)
     
-    foreign_column = col_matcher.get_column_matching(primary_df, foreign_df, primary_column)
+    foreign_column = col_matcher.get_column_matching(primary_df, foreign_df, primary_column, 2)
+    
+    print(foreign_column)
 
     row_matcher = RowMatcher()
 

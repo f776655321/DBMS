@@ -2,6 +2,7 @@ import pandas as pd
 import torch
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
+import numpy as np
 
 class RowMatcher:
     def __init__(self):
@@ -86,8 +87,7 @@ class ColMatcher:
         self.q_start = q_start
         self.q_end = q_end
         self.src_keys_ratio = src_keys_ratio
-        self.matching_ratio = matching_ratio
-        
+        self.matching_ratio = matching_ratio        
         return
 
     def get_qgrams(self, q, s):
@@ -138,11 +138,10 @@ class ColMatcher:
 
         return cnt
     
-    def get_column_matching(self, src_df, target_df, src_specified_column):
+    def get_column_matching(self, src_df, target_df, src_specified_column, n_col_out=1):
         tables = self.df_to_tables(src_df, target_df)
         src_table = tables[0]
         target_table = tables[1]
-        print(src_table)
         
         res = []
         print(f'Column matching!')
@@ -172,13 +171,19 @@ class ColMatcher:
             max_cnt, max_q = max(cnt_list)
             column_cnt.append((max_cnt, max_q))
 
-        idx = column_cnt.index(max(column_cnt))
+        sort_idx = np.argsort(column_cnt, axis=0)
+        sort_idx = sort_idx[:, 0]
+        tgt_rows = np.array(target_table['titles'])[sort_idx][:n_col_out-1]
+        
+        tgt_rows = tgt_rows.tolist()
+        sort_idx = sort_idx[:n_col_out-1].tolist()
+        
         # print(f'Find the best target column: {target_table["titles"][idx]} with q={column_cnt[idx][1]}')
         res.append({
             'src_row': src_table['titles'][index],
             'src_row_id': index,
-            'target_row': target_table['titles'][idx],
-            'target_row_id': idx,
+            'target_row': tgt_rows,
+            'target_row_id': sort_idx,
         })
         
         return res[0]['target_row']
