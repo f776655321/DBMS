@@ -65,9 +65,9 @@ if __name__ == '__main__':
     
     print(foreign_column)
 
-    row_matcher = RowMatcher()
+    # row_matcher = RowMatcher()
 
-    result = row_matcher.find(args.output_file, primary_column, foreign_column, primary_df, foreign_df)
+    # result = row_matcher.find(args.output_file, primary_column, foreign_column, primary_df, foreign_df)
 
 
 

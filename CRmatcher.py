@@ -176,7 +176,7 @@ class ColMatcher:
         tgt_rows = np.array(target_table['titles'])[sort_idx][:n_col_out-1]
         
         tgt_rows = tgt_rows.tolist()
-        sort_idx = sort_idx[:n_col_out-1].tolist()
+        sort_idx = sort_idx[:n_col_out].tolist()
         
         # print(f'Find the best target column: {target_table["titles"][idx]} with q={column_cnt[idx][1]}')
         res.append({
