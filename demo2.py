@@ -56,4 +56,4 @@ if __name__ == '__main__':
 
     row_matcher = RowMatcher()
 
-    result = row_matcher.find(args.output_file, foreign_column, primary_column, foreign_file, primary_file)
+    result = row_matcher.find(args.output_file, primary_column, foreign_column, primary_file, foreign_file)

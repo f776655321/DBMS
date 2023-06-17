@@ -14,7 +14,7 @@ class RowMatcher:
 
         self.model = SentenceTransformer('sentence-transformers/gtr-t5-large').to(self.device)
 
-    def find(self,output_file,foreign_coloum,primary_coloum,foreign_file,primary_file,thershold = 0.6,difference = 0.24):
+    def find(self,output_file,primary_coloum,foreign_coloum,primary_file,foreign_file,thershold = 0.6,difference = 0.24):
         foreign = pd.read_csv(foreign_file)
         primary = pd.read_csv(primary_file)
 

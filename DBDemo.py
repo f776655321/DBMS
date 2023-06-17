@@ -2,15 +2,11 @@ from DBCRmatcher import DBRowMatcher, DBColMatcher
 import mysql.connector
 
 config = {
-  "host": 
-  "user": 
-  "passwd": 
+  "host": "127.0.0.1",
+  "user": "root",
+  "passwd": "kevin777"
 }
-host = config['host']
-user = config['user']
-passwd = config['passwd']
-connector = mysql.connector.connect(host = host, user = user, passwd = passwd)
 
-Matcher = DBColMatcher(connector)
+Matcher = DBRowMatcher(config)
+Matcher.find(False, 'United_States_Cities', 'City', 'us_cities', 'us_cities', 'Source', 'Target')
 
-connector.close()
