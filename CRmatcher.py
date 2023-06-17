@@ -7,8 +7,6 @@ import numpy as np
 class RowMatcher:
     def __init__(self):
 
-        self.model = SentenceTransformer('sentence-transformers/gtr-t5-large')
-
         cuda_available = torch.cuda.is_available()
 
         self.device = torch.device("cuda" if cuda_available else "cpu")
@@ -16,10 +14,13 @@ class RowMatcher:
         self.model = SentenceTransformer('sentence-transformers/gtr-t5-large').to(self.device)
 
     def find(self, output_file, primary_column, foreign_column, primary, foreign, thershold = 0.6, difference = 0.24):
-        # foreign = pd.read_csv(foreign_file)
-        # primary = pd.read_csv(primary_file)
 
-        f_column_data = foreign[foreign_column].values
+        if(type(foreign_column) == type('')):
+            foreign_column = [foreign_column]
+
+        foreign['concat'] = foreign[foreign_column].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+
+        f_column_data = foreign['concat'].values
         p_column_data = primary[primary_column].values
 
         temp_predict = []
@@ -106,11 +107,14 @@ class ColMatcher:
 
         return res
     
-    def df_to_tables(self, df1, df2):
+    def df_to_tables(self, df1, df2, src_specified_column):
         df1 = df1.astype(str)
         df2 = df2.astype(str)
         df1.fillna('', inplace=True)
         df2.fillna('', inplace=True)
+        
+        if type(src_specified_column) == type([]):
+            df1['concat'] = df1[src_specified_column].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
         
         tables = []
         dfs = [df1, df2]
@@ -139,16 +143,19 @@ class ColMatcher:
         return cnt
     
     def get_column_matching(self, src_df, target_df, src_specified_column, n_col_out=1):
-        tables = self.df_to_tables(src_df, target_df)
+        tables = self.df_to_tables(src_df, target_df, src_specified_column)
         src_table = tables[0]
         target_table = tables[1]
         
         res = []
         print(f'Column matching!')
-        if src_specified_column in src_table['titles']:
-            index = src_table['titles'].index(src_specified_column)
+        if type(src_specified_column) == type([]):
+            index = src_table['titles'].index('concat')
         else:
-            return "The src_specified_column not in the src_table"
+            if src_specified_column in src_table['titles']:
+                index = src_table['titles'].index(src_specified_column)
+            else:
+                return "The src_specified_column not in the src_table"
     
         col_src = [src_table['items'][j][index].lower() for j in range(len(src_table['items']))]
         dup_src = len(col_src) - len(set(col_src))
@@ -172,9 +179,11 @@ class ColMatcher:
             column_cnt.append((max_cnt, max_q))
 
         sort_idx = np.argsort(column_cnt, axis=0)
-        sort_idx = sort_idx[:, 0]
-        tgt_rows = np.array(target_table['titles'])[sort_idx][:n_col_out-1]
-        
+        sort_idx = np.flip(sort_idx[:, 0])
+        print(sort_idx)
+        print(np.array(target_table['titles'])[sort_idx])
+        tgt_rows = np.array(target_table['titles'])[sort_idx][:n_col_out]
+        print(tgt_rows)
         tgt_rows = tgt_rows.tolist()
         sort_idx = sort_idx[:n_col_out].tolist()
         
@@ -185,5 +194,5 @@ class ColMatcher:
             'target_row': tgt_rows,
             'target_row_id': sort_idx,
         })
-        
+        print(res)
         return res[0]['target_row']
