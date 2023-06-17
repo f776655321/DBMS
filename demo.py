@@ -11,7 +11,7 @@ def parse_arguments():
                         default='autojoin-Benchmark')
     parser.add_argument('--case', type=str,
                         default='fruits 1')
-    parser.add_argument('--output_file', type=str,
+    parser.add_argument('--output_file', type=bool,
                         default=True)
 
     args = parser.parse_args()

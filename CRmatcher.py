@@ -68,18 +68,19 @@ class RowMatcher:
             f_indice = temp_predict[indice][0]
             p_indice = temp_predict[indice][1]
             
+            push_yet = set()
             for key, value in foreign_data[f_indice].items():
                 output[key].append(value)
-            
+                push_yet.add(key)
+
             for key, value in primary_data[p_indice].items():
-                output[key].append(value)
+                if(key not in push_yet):
+                    output[key].append(value)
 
         df = pd.DataFrame(output)
         if(output_file):
-            df.to_csv(output_file, index=False)
-            return None
-        else:
-            return df
+            df.to_csv('./output.csv', index=False)
+        return df
 
 class ColMatcher:
     def __init__(self, q_start=5, q_end=10, src_keys_ratio=0.5, matching_ratio=0.5):
