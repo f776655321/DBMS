@@ -16,7 +16,7 @@ cursor = db.cursor()
 cursor.execute("CREATE DATABASE IF NOT EXISTS Source")
 cursor.execute("CREATE DATABASE IF NOT EXISTS Target")
 
-topic = 'us cities'
+topic = 'texas govs 1'
 folder = f'./data/autojoin-Benchmark/{topic}'
 
 for table in os.listdir(folder):
@@ -31,7 +31,7 @@ for table in os.listdir(folder):
             create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ("
             for column_name in column_names:
                 column_name = column_name.replace(" ", "_")
-                create_table_query += f"`{column_name}` VARCHAR(512), "
+                create_table_query += f"`{column_name}` VARCHAR(255), "
             create_table_query = create_table_query.rstrip(", ") + ")"
             cursor.execute(create_table_query)
             

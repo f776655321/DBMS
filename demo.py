@@ -1,6 +1,7 @@
 from CRmatcher import ColMatcher, RowMatcher
 from argparse import ArgumentParser
 import os
+import pandas as pd
 
 def parse_arguments():
     parser = ArgumentParser()
@@ -11,8 +12,8 @@ def parse_arguments():
                         default='autojoin-Benchmark')
     parser.add_argument('--case', type=str,
                         default='fruits 1')
-    parser.add_argument('--output_file', type=str,
-                        default='./output.csv')
+    parser.add_argument('--output_file', type=bool,
+                        default=True)
 
     args = parser.parse_args()
     return args
@@ -55,13 +56,18 @@ if __name__ == '__main__':
     foreign_file, foreign_column, primary_column, primary_file = get_data(args.input_data_dir,args.benchmark,args.case)
 
     col_matcher = ColMatcher()
-    tables = col_matcher.files_to_tables(primary_file, foreign_file)
+    
+    primary_df = pd.read_csv(primary_file)
+        
+    foreign_df = pd.read_csv(foreign_file)
+    
+    foreign_column = col_matcher.get_column_matching(primary_df, foreign_df, primary_column, 2)
+    
+    print(foreign_column)
 
-    foreign_column = col_matcher.get_column_matching(tables[0], tables[1], primary_column)
+    # row_matcher = RowMatcher()
 
-    row_matcher = RowMatcher()
-
-    row_matcher.find(args.output_file, foreign_column, primary_column, foreign_file, primary_file)
+    # result = row_matcher.find(args.output_file, primary_column, foreign_column, primary_df, foreign_df)
 
 
 
