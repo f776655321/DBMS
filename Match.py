@@ -56,6 +56,7 @@ class DBMatcher:
         # Not Need ColMatcher
         else:
             result = self.RowMatcher.find(output_csv, primary_column, foreign_column, primary, foreign)
+        result = result.drop('concat', axis=1)
         return result
 
     
