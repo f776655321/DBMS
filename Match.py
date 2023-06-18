@@ -8,17 +8,18 @@ class CSVMatcher:
         self.RowMatcher = RowMatcher()
         self.ColMatcher = ColMatcher()
 
-    def Match(self, output_csv, primary_file, foreign_file, primary_column, foreign_column = None):
+    def Match(self, output_csv, primary_file, foreign_file, primary_column, foreign_column = None, find_col = 1):
         primary = pd.read_csv(primary_file)
         foreign = pd.read_csv(foreign_file)
 
         # Need ColMatcher
         if(foreign_column == None):
-            foreign_column = self.ColMatcher.get_column_matching(primary, foreign, primary_column)
+            foreign_column = self.ColMatcher.get_column_matching(primary, foreign, primary_column, find_col)
             result = self.RowMatcher.find(output_csv, primary_column, foreign_column, primary, foreign)
         # Not Need ColMatcher
         else:
             result = self.RowMatcher.find(output_csv, primary_column, foreign_column, primary, foreign)
+        result = result.drop('concat', axis=1)
         return result
     
 class DBMatcher:
@@ -28,8 +29,8 @@ class DBMatcher:
         self.passwd = config['passwd']
         self.RowMatcher = RowMatcher()
         self.ColMatcher = ColMatcher()
-        
-    def Match(self, output_csv, primary_db, foreign_db, primary_table, foreign_table,  primary_column, foreign_column = None):
+
+    def Match(self, output_csv, primary_db, foreign_db, primary_table, foreign_table,  primary_column, foreign_column = None, find_col = 1):
         
         connector = mysql.connector.connect(host = self.host, user = self.user, passwd = self.passwd)
         cursor = connector.cursor()
@@ -50,7 +51,7 @@ class DBMatcher:
 
         # Need ColMatcher
         if(foreign_column == None):
-            foreign_column = self.ColMatcher.get_column_matching(primary, foreign, primary_column)
+            foreign_column = self.ColMatcher.get_column_matching(primary, foreign, primary_column, find_col)
             result = self.RowMatcher.find(output_csv, primary_column, foreign_column, primary, foreign)
         # Not Need ColMatcher
         else:

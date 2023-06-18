@@ -17,11 +17,14 @@ class RowMatcher:
 
         if(type(foreign_column) == type('')):
             foreign_column = [foreign_column]
+        if(type(primary_column) == type('')):
+            primary_column = [primary_column]
 
         foreign['concat'] = foreign[foreign_column].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
+        primary['concat'] = primary[primary_column].apply(lambda row: ' '.join(row.values.astype(str)), axis=1)
 
         f_column_data = foreign['concat'].values
-        p_column_data = primary[primary_column].values
+        p_column_data = primary['concat'].values
 
         temp_predict = []
         store = []
@@ -148,7 +151,7 @@ class ColMatcher:
         target_table = tables[1]
         
         res = []
-        print(f'Column matching!')
+        print(f'Column matching...')
         if type(src_specified_column) == type([]):
             index = src_table['titles'].index('concat')
         else:
@@ -180,10 +183,10 @@ class ColMatcher:
 
         sort_idx = np.argsort(column_cnt, axis=0)
         sort_idx = sort_idx[:, 0]
-        print(sort_idx)
-        print(np.array(target_table['titles'])[sort_idx])
+        # print(sort_idx)
+        # print(np.array(target_table['titles'])[sort_idx])
         tgt_rows = np.array(target_table['titles'])[sort_idx][:n_col_out]
-        print(tgt_rows)
+        # print(tgt_rows)
         tgt_rows = tgt_rows.tolist()
         sort_idx = sort_idx[:n_col_out].tolist()
         
@@ -194,5 +197,5 @@ class ColMatcher:
             'target_row': tgt_rows,
             'target_row_id': sort_idx,
         })
-        print(res)
+        # print(res)
         return res[0]['target_row']
