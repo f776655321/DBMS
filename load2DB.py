@@ -3,6 +3,8 @@ import os
 import json
 import mysql.connector
 
+
+
 with open('.config.json') as f:
     config = json.load(f)
 
