@@ -10,37 +10,80 @@
 * Primary column: a column contains primary key.
 * (Optional) Foreign column: a column contains foreign key.
 
-### Column Matcher:
-#### If you are not sure which column is most suitable for joining based on the Primary column, you can use Column Matcher to find the most appropriate column.
+## CSV Matcher:
+#### If you want to analysis your CSV data, you can use CSVMatcher to help you join your table:
+`output_csv`: If you want to output a csv file, set **True**, otherwise, set **False**.
+
+`primary_file`: Input your primary table's csv file path.
+
+`foreign_file`: Input your foreign table's csv file path.
+
+`primary_column`: Input the primary column name you want to join. **e.g.** "Cities" or ["Cities", "Countries"]
+
+`foreign_column`: Input the foreign column name you want to join. **e.g.** "Cities" or ["Cities", "Countries"]
+
+`find_col`: Input the number you want **Column Matcher** to find the suitable foreign column.
+
 ```
-from CRmatcher import column_matcher
+from CRmatcher import CSVMatcher
 
-# build a col_matcher
+CSV = CSVMatcher()
 
-col_matcher = column_matcher()
-
-# To utilize ColumnMatcher effectively, you will need a table in JSON format that contains relevant and valuable information for the search process.
-
-tables = col_matcher.files_to_tables(primary_table, foreign_table)
-
-# Using the method "get_column_matching" to get the foreign_column.
-
-foreign_column = col_matcher.get_column_matching(tables[0], tables[1], primary_column)
+result = CSV.Match(output_csv, primary_file, foreign_file, primary_column, foreign_column, find_col)
 ```
-### Row Matcher (GPU required):
-#### After you have foreign column, you can use Row Matcher to generate the final join table. (Currently, Row Matcher would output the result to a csv file.)
+#### If you want to join table with multiple primary column or foreign column, you can input `primary_column` or `foreign_column` as List.
 ```
-from CRmatcher import FileRowMatcher
-
-# build a row_matcher
-
-row_matcher = FileRowMatcher()
-
-# Using the method "find" to generate the result
-
-row_matcher.find(output_table, foreign_column, primary_column, foreign_table, primary_table)
+result = CSV.Match(output_csv, primary_file, foreign_file, [primary_columns], [foreign_columns])
 ```
-### note: You can find the demo code in demo.py and demo2.py
+#### If you are not sure which column is most suitable for joining based on the Primary column, you can leave `foreign_column` empty:
+```
+result = CSV.Match(output_csv, primary_file, foreign_file, primary_column)
+```
+#### If you want **Column Matcher** to give you multiple suitable column, use `find_col` to define how may column you want to return:
+```
+result = CSV.Match(output_csv, primary_file, foreign_file, primary_column, find_col = 2)
+```
+## DB Matcher:
+#### If you want to analysis your SQL Database data, you can use DBMatcher to help you join your table:
+`config`: Input your database configuraion **e.g.** 
+```
+{
+  "host": "127.0.0.1",
+  "user": "root",
+  "passwd": "pwd"
+}
+```
+`output_csv`: If you want to output a csv file, set **True**, otherwise, set **False**.
+
+`primary_file`: Input your primary table's csv file path.
+
+`foreign_file`: Input your foreign table's csv file path.
+
+`primary_column`: Input the primary column name you want to join. **e.g.** "Cities" or ["Cities", "Countries"]
+
+`foreign_column`: Input the foreign column name you want to join. **e.g.** "Cities" or ["Cities", "Countries"]
+
+`find_col`: Input the number you want **Column Matcher** to find the suitable foreign column.
+
+```
+from CRmatcher import DBMatcher
+
+DB = DBMatcher(config)
+
+result = DB.Match(output_csv, primary_file, foreign_file, primary_column, foreign_column, find_col)
+```
+#### If you want to join table with multiple primary column or foreign column, you can input `primary_column` or `foreign_column` as List.
+```
+result = DB.Match(output_csv, primary_file, foreign_file, [primary_columns], [foreign_columns])
+```
+#### If you are not sure which column is most suitable for joining based on the Primary column, you can leave `foreign_column` empty:
+```
+result = DB.Match(output_csv, primary_file, foreign_file, primary_column)
+```
+#### If you want **Column Matcher** to give you multiple suitable column, use `find_col` to define how may column you want to return:
+```
+result = DB.Match(output_csv, primary_file, foreign_file, primary_column, find_col = 2)
+```
 
 
 
