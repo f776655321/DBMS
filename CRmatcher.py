@@ -182,9 +182,9 @@ class ColMatcher:
             column_cnt.append((max_cnt, max_q))
 
         sort_idx = np.argsort(column_cnt, axis=0)
-        sort_idx = sort_idx[:, 0]
-        # print(sort_idx)
-        # print(np.array(target_table['titles'])[sort_idx])
+        sort_idx = np.flip(sort_idx[:, 0])
+        print(sort_idx)
+        print(np.array(target_table['titles'])[sort_idx])
         tgt_rows = np.array(target_table['titles'])[sort_idx][:n_col_out]
         # print(tgt_rows)
         tgt_rows = tgt_rows.tolist()
