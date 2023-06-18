@@ -3,6 +3,7 @@ import torch
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 import numpy as np
+import time
 
 class RowMatcher:
     def __init__(self):
@@ -13,7 +14,7 @@ class RowMatcher:
 
         self.model = SentenceTransformer('sentence-transformers/gtr-t5-large').to(self.device)
 
-    def find(self, output_file, primary_column, foreign_column, primary, foreign, thershold = 0.6, difference = 0.24):
+    def find(self, output_file, primary_column, foreign_column, primary, foreign, flag, thershold = 0.6, difference = 0.24):
 
         if(type(foreign_column) == type('')):
             foreign_column = [foreign_column]
@@ -57,10 +58,20 @@ class RowMatcher:
         if(store[representation] > thershold):
             indices = torch.nonzero(store > (store[representation] - difference))
 
-        f_column_names = foreign.columns.tolist()
-        p_column_names = primary.columns.tolist()
+        if(flag == 1):
 
-        total_names = f_column_names + p_column_names
+            f_column_names = foreign.columns.tolist()
+            p_column_names = primary.columns.tolist()
+            f_column_names = ['source-' + f_column_name for f_column_name in f_column_names]
+            p_column_names = ['target-' + p_column_name for p_column_name in p_column_names]
+            total_names = f_column_names + p_column_names
+        else:
+            f_column_names = foreign.columns.tolist()
+            p_column_names = primary.columns.tolist()
+            f_column_names = ['target-' + f_column_name for f_column_name in f_column_names]
+            p_column_names = ['source-' + p_column_name for p_column_name in p_column_names]
+            total_names =  p_column_names + f_column_names
+
         output = dict()
 
         for name in total_names:
@@ -73,13 +84,13 @@ class RowMatcher:
             f_indice = temp_predict[indice][0]
             p_indice = temp_predict[indice][1]
             
-            push_yet = set()
+            # push_yet = set()
             for key, value in foreign_data[f_indice].items():
                 output[key].append(value)
-                push_yet.add(key)
+                # push_yet.add(key)
             for key, value in primary_data[p_indice].items():
-                if(key not in push_yet):
-                    output[key].append(value)
+                # if(key not in push_yet):
+                output[key].append(value)
 
         df = pd.DataFrame(output)
         if(output_file):
