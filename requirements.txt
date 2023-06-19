@@ -1,6 +1,6 @@
 tqdm
 pandas
-pytorch
+torch
 sentence-transformers
-mysql
+mysql-connector-python
 numpy
