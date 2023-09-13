@@ -1,4 +1,5 @@
 # CR Matcher: an elegant and powerful method for joining tables.
+## You can view our [report](https://docs.google.com/document/d/1Ge8miJBxsIRYBPqLYTDjGzcvLwCRj_gGt14z2D6E2XI/edit?usp=sharing) here !!!
 ## CR Matcher contains two components:
 * **Column Matcher**: assist the user in identifying the most suitable column for joining based on the provided primary column.
 * **Row Matcher**: handle the task of joining the two tables using the primary column and foreign column provided.
